@@ -14,10 +14,6 @@ import {
 } from '../src/common';
 
 import {
-  addTypenameTransformer,
-} from '../src/queryTransformers';
-
-import {
   parse,
   print,
   OperationDefinitionNode,
@@ -42,7 +38,7 @@ describe('ExtractGQL', () => {
       }
     }`;
 
-  const egql = new ExtractGQL({ inputFilePath: 'not-real'});
+  const egql = new ExtractGQL({ inputFilePath: 'not-real', extensions: ['graphql'] });
   const keys = [
     egql.getQueryKey(queries.definitions[0]),
     egql.getQueryKey(queries.definitions[1]),
@@ -52,7 +48,7 @@ describe('ExtractGQL', () => {
     assert.doesNotThrow(() => {
       new ExtractGQL({
         inputFilePath: 'queries.graphql',
-        outputFilePath: 'output.json',
+         extensions: ['graphql'],
       });
     });
   });
@@ -103,7 +99,7 @@ describe('ExtractGQL', () => {
     });
 
     it('should be able to handle a document with a single query', () => {
-      const myegql = new ExtractGQL({ inputFilePath: 'nothing' });
+      const myegql = new ExtractGQL({ inputFilePath: 'nothing', extensions: ['graphql'] });
       const document = gql`query author {
         name
       }`;
@@ -114,7 +110,7 @@ describe('ExtractGQL', () => {
     });
 
     it('should be able to handle a document with a fragment', () => {
-      const myegql = new ExtractGQL({ inputFilePath: 'empty' });
+      const myegql = new ExtractGQL({ inputFilePath: 'empty', extensions: ['graphql'] });
       const document = gql`
         query authorList {
           author {
@@ -133,7 +129,7 @@ describe('ExtractGQL', () => {
     });
 
     it('should be able to handle a document with multiple fragments', () => {
-      const myegql = new ExtractGQL({ inputFilePath: 'empty' });
+      const myegql = new ExtractGQL({ inputFilePath: 'empty', extensions: ['graphql'] });
       const document = gql`
         query authorList {
           author {
@@ -153,7 +149,7 @@ describe('ExtractGQL', () => {
     });
 
     it('should be able to handle a document with unused fragments', () => {
-      const myegql = new ExtractGQL({ inputFilePath: 'empty' });
+      const myegql = new ExtractGQL({ inputFilePath: 'empty', extensions: ['graphql'] });
       const document = gql`
         query authorList {
           author {
@@ -169,12 +165,12 @@ describe('ExtractGQL', () => {
       const map = egql.createMapFromDocument(document);
       assert.equal(
         Object.keys(map)[0],
-        print(createDocumentFromQuery(document.definitions[0]))
+        print(createDocumentFromQuery(document.definitions[0])),
       );
     });
 
     it('should be able to handle a document with multiple queries sharing a fragment', () => {
-      const myegql = new ExtractGQL({ inputFilePath: 'empty' });
+      const myegql = new ExtractGQL({ inputFilePath: 'empty', extensions: ['graphql'] });
       const document = gql`
         query authorList {
           author {
@@ -224,7 +220,7 @@ describe('ExtractGQL', () => {
     });
 
     it('should be able to handle a document with multiple queries', () => {
-      const myegql = new ExtractGQL({ inputFilePath: 'empty' });
+      const myegql = new ExtractGQL({ inputFilePath: 'empty', extensions: ['graphql'] });
       const document = gql`query author {
         name
       }
@@ -235,17 +231,17 @@ describe('ExtractGQL', () => {
       const keys = Object.keys(map);
       assert.equal(keys.length, 2);
       assert.include(keys, myegql.getQueryDocumentKey(
-        createDocumentFromQuery(document.definitions[0])
+        createDocumentFromQuery(document.definitions[0]),
       ));
       assert.include(keys, myegql.getQueryDocumentKey(
-        createDocumentFromQuery(document.definitions[1])
+        createDocumentFromQuery(document.definitions[1]),
       ));
     });
 
     it('should be able to apply query transforms to a document with fragments', () => {
       const myegql = new ExtractGQL({
         inputFilePath: 'empty',
-        queryTransformers: [ addTypenameTransformer ],
+        extensions: ['graphql'],
       });
       const document = gql`
       query {
@@ -281,7 +277,7 @@ describe('ExtractGQL', () => {
     });
 
     it('should be able to handle a document with a mutation', () => {
-      const myegql = new ExtractGQL({ inputFilePath: 'empty' });
+      const myegql = new ExtractGQL({ inputFilePath: 'empty', extensions: ['graphql'] });
       const document = gql`
         mutation changeAuthorStuff {
           firstName
@@ -295,20 +291,20 @@ describe('ExtractGQL', () => {
     });
 
     it('should sort fragments correctly', () => {
-      const myegql = new ExtractGQL({ inputFilePath: 'empty' });
+      const myegql = new ExtractGQL({ inputFilePath: 'empty', extensions: ['graphql'] });
       const doc = gql`
-        fragment d on Author { x } 
+        fragment d on Author { x }
         fragment b on Author { x }
-        fragment c on Author { x } 
+        fragment c on Author { x }
         fragment a on Author { x }
-        query { 
+        query {
           ...a
           ...b
           ...c
           ...d
         }`;
       const result = gql`
-        query { 
+        query {
           ...a
           ...b
           ...c
@@ -316,7 +312,7 @@ describe('ExtractGQL', () => {
         }
         fragment a on Author { x }
         fragment b on Author { x }
-        fragment c on Author { x } 
+        fragment c on Author { x }
         fragment d on Author { x }`;
       const map = myegql.createMapFromDocument(doc);
       const keys = Object.keys(map);
@@ -346,24 +342,15 @@ describe('ExtractGQL', () => {
       const queryTransformer = (queryDoc: DocumentNode) => {
         return newDocument;
       };
-      const myegql = new ExtractGQL({ inputFilePath: 'empty' });
+      const myegql = new ExtractGQL({ inputFilePath: 'empty', extensions: ['graphql'] });
       myegql.addQueryTransformer(queryTransformer);
       const map = myegql.createMapFromDocument(originalDocument);
       const keys = Object.keys(map);
       assert.equal(keys.length, 1);
       assert.equal(
         keys[0],
-        myegql.getQueryDocumentKey(newDocument)
+        myegql.getQueryDocumentKey(newDocument),
       );
-    });
-  });
-
-  describe('processGraphQLFile', () => {
-    it('should be able to load a GraphQL file with multiple queries', (done) => {
-      egql.processGraphQLFile('./test/fixtures/single_query/queries.graphql').then((documentMap) => {
-        assert.equal(Object.keys(documentMap).length, 2);
-        done();
-      });
     });
   });
 
@@ -392,11 +379,11 @@ describe('ExtractGQL', () => {
         assert.equal(Object.keys(result).length, 2);
         assert.include(
           Object.keys(result),
-          print(createDocumentFromQuery(queries.definitions[0]))
+          print(createDocumentFromQuery(queries.definitions[0])),
         );
         assert.include(
           Object.keys(result),
-          print(createDocumentFromQuery(queries.definitions[1]))
+          print(createDocumentFromQuery(queries.definitions[1])),
         );
         done();
       });
@@ -407,11 +394,11 @@ describe('ExtractGQL', () => {
         assert.equal(Object.keys(result).length, 2);
         assert.include(
           Object.keys(result),
-          print(createDocumentFromQuery(queries.definitions[0]))
+          print(createDocumentFromQuery(queries.definitions[0])),
         );
         assert.include(
           Object.keys(result),
-          print(createDocumentFromQuery(queries.definitions[1]))
+          print(createDocumentFromQuery(queries.definitions[1])),
         );
         done();
       });
@@ -442,7 +429,7 @@ describe('ExtractGQL', () => {
         assert.equal(keys.length, 1);
         assert.include(
           Object.keys(result),
-          print(expectedQuery)
+          print(expectedQuery),
         );
       });
     });
@@ -462,9 +449,7 @@ describe('ExtractGQL', () => {
 
       const jsEgql = new ExtractGQL({
         inputFilePath: 'idk',
-        extension: 'js',
-        inJsCode: true,
-        outputFilePath: 'idk',
+        extensions: ['js'],
       });
 
       return jsEgql.processInputPath('./test/fixtures/single_fragment_js')
@@ -473,7 +458,7 @@ describe('ExtractGQL', () => {
           assert.equal(keys.length, 1);
           assert.equal(
             keys[0],
-            print(expectedQuery)
+            print(expectedQuery),
           );
         });
     });
@@ -508,12 +493,11 @@ describe('ExtractGQL', () => {
           }
         }`;
       const myegql = new ExtractGQL({
-        inputFilePath: "---",
-        queryTransformers: [ addTypenameTransformer ],
+        inputFilePath: '---', extensions: ['graphql'],
       });
       assert.equal(
         myegql.getQueryKey(query.definitions[0]),
-        print(transformedQuery.definitions[0])
+        print(transformedQuery.definitions[0]),
       );
     });
   });

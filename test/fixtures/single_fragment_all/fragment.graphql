@@ -1,0 +1,4 @@
+fragment graphqldetails on Author {
+  firstName
+  lastName
+}

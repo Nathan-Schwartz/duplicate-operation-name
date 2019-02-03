@@ -1,0 +1,13 @@
+query {
+  author {
+    firstName
+    lastName
+  }
+}
+
+query graphqlOtherQuery {
+  person {
+    firstName
+    lastName
+  }
+}

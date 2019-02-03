@@ -1,5 +1,5 @@
 const frag = gql`
-  fragment jsdetails on Author {
+  fragment details on Author {
     firstName
     lastName
   }
@@ -8,7 +8,7 @@ const frag = gql`
 const query = gql`
   query {
     author {
-      ...jsdetails
+      ...details
     }
   }
 

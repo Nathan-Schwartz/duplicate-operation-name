@@ -6,8 +6,8 @@ declare module 'graphql-tag/parser' {
   // XXX figure out how to directly export this method
   function parse(
       source: Source | string,
-      options?: ParseOptions
-  ): Document;
+      options?: ParseOptions,
+  ): DocumentNode;
 }
 
 declare module 'graphql-tag/printer' {

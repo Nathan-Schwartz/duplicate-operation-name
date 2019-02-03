@@ -1,0 +1,9 @@
+mutation graphqlChangeAuthorStuff {
+  firstName
+  lastName
+}
+
+mutation graphqlChangeAuthorStuff {
+  firstName
+  lastName
+}

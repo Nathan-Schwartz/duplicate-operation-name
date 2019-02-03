@@ -1,0 +1,4 @@
+mutation changeAuthorStuff {
+  firstName
+  lastName
+}

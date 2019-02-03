@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es5",
     "module": "commonjs",
-    "lib": ["es6", "dom", "esnext.asynciterable"],
+    "lib": ["es6", "esnext.asynciterable"],
     "moduleResolution": "node",
     "sourceMap": true,
     "declaration": true,
@@ -19,7 +19,6 @@
     "typings.d.ts",
     "src/binary.ts",
     "test/tests.ts",
-    "fetch-mock.typings.d.ts",
     "index.ts"
   ]
 }
