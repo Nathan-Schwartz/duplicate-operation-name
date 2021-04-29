@@ -34,7 +34,7 @@ describe('ExtractGQL', () => {
         inputFilePath: resolve(fixturesPath, 'no_queries'),
         extensions: ['graphql', 'js'],
         literalTag: 'gql',
-      }).extract().catch(console.error);
+      }).extract();
     });
   });
 
@@ -65,9 +65,16 @@ function generateTest(data: TestBuilderInput): void {
   it(`[${outcome}][${queryType}][${extension}] should ${shouldThrow ? '' : 'not '}throw`, () => {
     const method = shouldThrow ? 'throws' : 'doesNotThrow';
 
+    const extensionMap: { [key: string]: Array<string> } = {
+      all: ['graphql', 'js', 'jsx', 'ts', 'tsx'],
+      js: ['js', 'jsx'],
+      ts: ['ts', 'tsx'],
+      graphql: ['graphql'],
+    };
+
     const options = {
       inputFilePath: resolve(fixturesPath, `${outcome}_${queryType}_${extension}`) + '/',
-      extensions: extension === 'all' ? ['graphql', 'js', 'ts'] : [extension],
+      extensions: extensionMap[extension],
       literalTag: 'gql',
     };
 

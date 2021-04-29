@@ -1,8 +1,8 @@
 # Duplicate GraphQL Operation Names
 
-`duplicate-operation-name` is a simple cli tool that makes it easy to check if there are any duplicate operation names in GraphQL projects that use statically analyze-able GraphQL queries.
+`duplicate-operation-name` is a simple cli tool that makes it easy to check if there are any duplicate operation names in GraphQL projects that use static GraphQL queries.
 
-It can be called on individual files, or recurisvely step through directories. It is compatible with `.graphql`, `.ts`, and `.js` files.
+It can be called on individual files, or recurisvely step through directories. It is compatible with `.graphql`, `.ts`, `.tsx`, `.js`, and `.jsx` files.
 
 
 # Installation
@@ -42,19 +42,19 @@ No queries found.
 ```
 
 
-### Analyzing Queries from GraphQL files
+### Analyzing Queries in GraphQL files (.graphql)
 
 ```shell
 duplicate-operation-name queries.graphql --graphql
 ```
 
-### Analyzing Queries from TypeScript
+### Analyzing Queries in TypeScript files (.ts, .tsx)
 
 ```shell
 duplicate-operation-name src/index.ts --ts
 ```
 
-### Analyzing Queries from JavaScript
+### Analyzing Queries in JavaScript files (.js, .jsx)
 
 ```shell
 duplicate-operation-name src/index.js --js
@@ -62,7 +62,7 @@ duplicate-operation-name src/index.js --js
 
 
 ### Analyzing Queries from Folders
-It is also possible to analyze a directory, perhaps containing `.graphql`, `.ts.`, and `.js` files:
+It is also possible to analyze a directory containing `.graphql`, `.ts.`, `.tsx`, `.js` and `.jsx` files:
 
 ```shell
 duplicate-operation-name src/ --graphql --ts --js

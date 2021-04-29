@@ -147,7 +147,7 @@ export class ExtractGQL {
       const extension = ExtractGQL.getFileExtension(inputFile);
 
       if (this.extensions.some(cur => cur === extension)) {
-        if (extension === 'js' || extension === 'ts') {
+        if (['js', 'jsx', 'ts', 'tsx'].some(cur => cur === extension)) {
           // Read from a JS file
           return ExtractGQL.readFile(inputFile).then((result) => {
             const literalContents = findTaggedTemplateLiteralsInJS(result, this.literalTag);
@@ -246,7 +246,7 @@ export const main = (argv: YArgsv) => {
   };
 
   if (argv['js']) {
-    options.extensions.push('js');
+    options.extensions.push('js', 'jsx');
   }
 
   if (argv['graphql']) {
@@ -254,7 +254,7 @@ export const main = (argv: YArgsv) => {
   }
 
   if (argv['ts']) {
-    options.extensions.push('ts');
+    options.extensions.push('ts', 'tsx');
   }
 
   if (argv['literalTag']) {
