@@ -10,7 +10,7 @@ import {
   FragmentDefinitionNode,
 } from 'graphql';
 
-import _ = require('lodash');
+import merge from 'lodash.merge';
 
 // Checks if a given GraphQL definition is an operation definition (i.e. either query or mutation).
 export function isOperationDefinition(defn: DefinitionNode): defn is OperationDefinitionNode {
@@ -91,10 +91,10 @@ export function getFragmentNames(selectionSet: SelectionSetNode, document: Docum
         fragmentDefinitions[selection.name.value].selectionSet,
         document,
       );
-      fragmentNames = _.merge(fragmentNames, innerFragmentNames);
+      fragmentNames = merge(fragmentNames, innerFragmentNames);
     } else if (isInlineFragment(selection) || isField(selection)) {
       const innerFragmentNames = getFragmentNames(selection.selectionSet, document);
-      fragmentNames = _.merge(fragmentNames, innerFragmentNames);
+      fragmentNames = merge(fragmentNames, innerFragmentNames);
     }
   });
   return fragmentNames;

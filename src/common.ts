@@ -49,7 +49,8 @@ export function sortFragmentsByName(a: DefinitionNode, b: DefinitionNode): numbe
 
 // Apply sorting strategy for fragments.
 export function applyFragmentDefinitionSort(document: DocumentNode): DocumentNode {
-  document.definitions = document.definitions.sort(sortFragmentsByName);
+  // @ts-ignore (doesn't want definitions to be reassigned)
+  document.definitions = document.definitions.slice().sort(sortFragmentsByName);
   return document;
 }
 

@@ -1,7 +1,7 @@
 // This file implements the extractgql CLI tool.
 
-import fs = require('fs');
-import path = require('path');
+import * as fs from 'fs';
+import * as path from 'path';
 
 import {
   parse,
@@ -32,8 +32,6 @@ import {
   TransformedQueryWithId,
   QueryTransformer,
 } from './common';
-
-import _ = require('lodash');
 
 export type ExtractGQLOptions = {
   inputFilePath: string,
